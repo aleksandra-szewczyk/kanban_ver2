@@ -1,22 +1,22 @@
 function Column(id, name) {
-	var self = this;
-	
-	this.id = id;
-	this.name = name || 'Nie podano nazwy';
-	this.element = createColumn();
+    var self = this;
 
-	function createColumn() {
-		var column = $('<div class="column"></div>');
-		var columnTitle = $('<h2 class="column-title">' + self.name + '</h2>');
-		var columnCardList = $('<ul class="card-list"></ul>');
-		var columnDelete = $('<button class="btn-delete">x</button>');
-		var columnAddCard = $('<button class="column-add-card">Dodaj kartę</button>');
+    this.id = id;
+    this.name = name || 'Nie podano nazwy';
+    this.element = createColumn();
 
-		columnDelete.click(function() {
-			self.deleteColumn();
-		});
-		
-        columnAddCard.click(function(event) {
+    function createColumn() {
+        var column = $('<div class="column"></div>');
+        var columnTitle = $('<h2 class="column-title">' + self.name + '</h2>');
+        var columnCardList = $('<ul class="card-list"></ul>');
+        var columnDelete = $('<button class="btn-delete">x</button>');
+        var columnAddCard = $('<button class="column-add-card">Dodaj kartę</button>');
+
+        columnDelete.click(function () {
+            self.deleteColumn();
+        });
+
+        columnAddCard.click(function (event) {
             var cardName = prompt("Wpisz nazwę karty");
             event.preventDefault();
             $.ajax({
@@ -26,13 +26,13 @@ function Column(id, name) {
                     name: cardName,
                     bootcamp_kanban_column_id: self.id
                 },
-            success: function(response) {
-                var card = new Card(response.id, cardName);
-                self.createCard(card);
-            }
+                success: function (response) {
+                    var card = new Card(response.id, cardName);
+                    self.createCard(card);
+                }
             });
         });
-			
+
         column.append(columnTitle)
             .append(columnDelete)
             .append(columnAddCard)
@@ -42,15 +42,15 @@ function Column(id, name) {
 }
 
 Column.prototype = {
-    createCard: function(card) {
+    createCard: function (card) {
         this.element.children('ul').append(card.element);
-	},
-	deleteColumn: function() {
+    },
+    deleteColumn: function () {
         var self = this;
         $.ajax({
             url: baseUrl + '/column/' + self.id,
             method: 'DELETE',
-            success: function(response){
+            success: function (response) {
                 self.element.remove();
             }
         });
